@@ -12,7 +12,7 @@
 /.config
 /resources
 /target
-/project/target
+/project/target/
 
 # testing
 /coverage
