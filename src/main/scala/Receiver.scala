@@ -9,28 +9,23 @@ package example
 
 import cats.effect.IO
 import cats.effect.IOApp
-import com.comcast.ip4s.port
 import lepus.client.*
 import lepus.protocol.domains.*
 
 object Receiver extends IOApp.Simple {
 
-  private val exchange = ExchangeName.default
-
+  private val connect = RabbitConnection()
   def app(con: Connection[IO]) = con.channel.use(ch =>
     for {
       message <- ch.messaging
         .consume[String](QueueName("handler-inbox"))
         .evalMap { message =>
-          IO(println(s"Received message: $message"))
+          IO(println(s"Received message: ${message.message}"))
         }
         .compile.drain
 
     } yield ()
   )
-
-  private val connect = LepusClient[IO](port= port"5673", username="shamalw", password="secret", vhost=Path("paglabs24"), debug = true)
-
 
   override def run: IO[Unit] = connect.use(app)
 
