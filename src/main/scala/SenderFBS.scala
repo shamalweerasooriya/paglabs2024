@@ -9,37 +9,14 @@ import cats.effect.IO
 import cats.effect.IOApp
 import com.comcast.ip4s.port
 import helpers.FlatbufferHelper
+import helpers.RabbitConnection.Sender
 import lepus.client.*
 import lepus.protocol.domains.*
 
 object SenderFBS extends IOApp.Simple {
-
-  private val exchange = ExchangeName.default
-
-  private val connect = LepusClient[IO](port= port"5673", username="shamalw", password="secret", vhost=Path("paglabs24"), debug = true)
-
-
-  override def run: IO[Unit] = connect.use(app)
-
+  private val sender = Sender[Array[Byte]](QueueName("handler-inbox"), ExchangeName("events"), ShortString("some.topic"), FlatbufferHelper().Encode())
+  override def run: IO[Unit] = sender._2.use(sender._1.app)
 }
 
-def getFBSMessage(): Array[Byte] = {
-  FlatbufferHelper().Encode()
-}
-def app(con: Connection[IO]) = con.channel.use(ch =>
-  for {
-    _ <- IO.println(con.capabilities.toFieldTable)
-    _ <- ch.exchange.declare(ExchangeName("events"), ExchangeType.Topic)
-    q <- ch.queue.declare(QueueName("handler-inbox"), autoDelete = false)
-    _ <- ch.queue.bind(QueueName("handler-inbox"), ExchangeName("events"), ShortString("some.topic"))
-    qOpt <- IO.fromOption(q)(new Exception("Queue declaration failed"))
-
-    _ <- ch.messaging.publish(
-      ExchangeName("events"),
-      routingKey = ShortString("some.topic"),
-      Message(getFBSMessage())
-    )
-  } yield ()
-)
 
 

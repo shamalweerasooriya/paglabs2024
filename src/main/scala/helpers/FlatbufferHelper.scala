@@ -24,12 +24,10 @@ class FlatbufferHelper {
     builder.sizedByteArray()
   }
 
-  def Read(buf: ByteBuffer): Unit = {
+  def Read(payload: Array[Byte]): String = {
     // Retrieve the data
-    val person = Person.getRootAsPerson(buf)
-
-    println(s"Name: ${person.name}")
-    println(s"Age: ${person.age}")
+    val person = Person.getRootAsPerson(ByteBuffer.wrap(payload))
+    person.name() + " is " + person.age() + " years old"
   }
 
 }
