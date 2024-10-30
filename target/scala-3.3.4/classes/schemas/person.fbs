@@ -1,0 +1,8 @@
+namespace MyNamespace;
+
+table Person {
+  name: string;
+  age: string;
+}
+
+root_type Person;

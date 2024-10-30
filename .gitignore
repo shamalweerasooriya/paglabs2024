@@ -11,7 +11,7 @@
 /.cache
 /.config
 /resources
-/target
+#/target
 
 # testing
 /coverage
@@ -33,4 +33,4 @@ package-lock.json
 
 /yarn.lock
 /.bsp/
-/project/
+#/project/
