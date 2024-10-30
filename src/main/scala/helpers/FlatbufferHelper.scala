@@ -5,18 +5,18 @@ import com.google.flatbuffers.FlatBufferBuilder
 
 import java.nio.ByteBuffer
 
-class FlatbufferHelper {
-  def Encode(): Array[Byte] = {
+object FlatbufferHelper {
+  def Encode(name: String, age: String): Array[Byte] = {
     val builder = new FlatBufferBuilder(1024)
 
     // Create a FlatBuffer object for `Person`
-    val name = builder.createString("John Doe")
-    val age = builder.createString("30")
+    val encodeName = builder.createString(name)
+    val encodeAge = builder.createString(age)
 
     // Start building the `Person` table
     Person.startPerson(builder)
-    Person.addName(builder, name)
-    Person.addAge(builder, age)
+    Person.addName(builder, encodeName)
+    Person.addAge(builder, encodeAge)
     val personOffset = Person.endPerson(builder)
 
     // Complete the buffer

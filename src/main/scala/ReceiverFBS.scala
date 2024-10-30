@@ -15,7 +15,7 @@ import lepus.protocol.domains.*
 import java.nio.ByteBuffer
 
 object ReceiverFBS extends IOApp.Simple {
-  private val receiver = Receiver(QueueName("handler-inbox"), FlatbufferHelper().Read)
+  private val receiver = Receiver(QueueName("flatbuffer-inbox"), FlatbufferHelper.Read)
   override def run: IO[Unit] = receiver._2.use(receiver._1.app)
 }
 

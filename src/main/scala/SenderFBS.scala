@@ -14,7 +14,7 @@ import lepus.client.*
 import lepus.protocol.domains.*
 
 object SenderFBS extends IOApp.Simple {
-  private val sender = Sender[Array[Byte]](QueueName("handler-inbox"), ExchangeName("events"), ShortString("some.topic"), FlatbufferHelper().Encode())
+  private val sender = Sender[Array[Byte]](QueueName("flatbuffer-inbox"), ExchangeName("events"), ShortString("flatbuffers.from.fluffy.grapefruit"), FlatbufferHelper.Encode("Delacour", "17"))
   override def run: IO[Unit] = sender._2.use(sender._1.app)
 }
 
