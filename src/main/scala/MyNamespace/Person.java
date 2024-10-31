@@ -15,31 +15,62 @@ public final class Person extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Person __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public String name() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String age() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ageAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer ageInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public String id() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer idAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer idInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String firstName() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer firstNameAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer firstNameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public String lastName() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer lastNameAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer lastNameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public int age() { int o = __offset(10); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String gender() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer genderAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer genderInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public String email() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer emailAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer emailInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String phone() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer phoneAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer phoneInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  public MyNamespace.Address address() { return address(new MyNamespace.Address()); }
+  public MyNamespace.Address address(MyNamespace.Address obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPerson(FlatBufferBuilder builder,
-      int nameOffset,
-      int ageOffset) {
-    builder.startTable(2);
-    Person.addAge(builder, ageOffset);
-    Person.addName(builder, nameOffset);
+      int idOffset,
+      int firstNameOffset,
+      int lastNameOffset,
+      int age,
+      int genderOffset,
+      int emailOffset,
+      int phoneOffset,
+      int addressOffset) {
+    builder.startTable(8);
+    Person.addAddress(builder, addressOffset);
+    Person.addPhone(builder, phoneOffset);
+    Person.addEmail(builder, emailOffset);
+    Person.addGender(builder, genderOffset);
+    Person.addAge(builder, age);
+    Person.addLastName(builder, lastNameOffset);
+    Person.addFirstName(builder, firstNameOffset);
+    Person.addId(builder, idOffset);
     return Person.endPerson(builder);
   }
 
-  public static void startPerson(FlatBufferBuilder builder) { builder.startTable(2); }
-  public static void addName(FlatBufferBuilder builder, int nameOffset) { builder.addOffset(0, nameOffset, 0); }
-  public static void addAge(FlatBufferBuilder builder, int ageOffset) { builder.addOffset(1, ageOffset, 0); }
+  public static void startPerson(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void addId(FlatBufferBuilder builder, int idOffset) { builder.addOffset(0, idOffset, 0); }
+  public static void addFirstName(FlatBufferBuilder builder, int firstNameOffset) { builder.addOffset(1, firstNameOffset, 0); }
+  public static void addLastName(FlatBufferBuilder builder, int lastNameOffset) { builder.addOffset(2, lastNameOffset, 0); }
+  public static void addAge(FlatBufferBuilder builder, int age) { builder.addInt(3, age, 0); }
+  public static void addGender(FlatBufferBuilder builder, int genderOffset) { builder.addOffset(4, genderOffset, 0); }
+  public static void addEmail(FlatBufferBuilder builder, int emailOffset) { builder.addOffset(5, emailOffset, 0); }
+  public static void addPhone(FlatBufferBuilder builder, int phoneOffset) { builder.addOffset(6, phoneOffset, 0); }
+  public static void addAddress(FlatBufferBuilder builder, int addressOffset) { builder.addOffset(7, addressOffset, 0); }
   public static int endPerson(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }
-  public static void finishPersonBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedPersonBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
