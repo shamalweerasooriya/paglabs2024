@@ -10,3 +10,7 @@ lazy val root = (project in file("."))
 
 // https://mvnrepository.com/artifact/com.google.flatbuffers/flatbuffers-java
 libraryDependencies += "com.google.flatbuffers" % "flatbuffers-java" % "2.0.0"
+
+Compile / PB.targets := Seq(
+  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
+)
