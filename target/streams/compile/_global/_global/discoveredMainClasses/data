@@ -1,1 +1,1 @@
-["ReceiverFBS","ReceiverPBS","SenderFBS","SenderPBS","example.Receiver","example.Sender"]
+["ReceiverFBS","ReceiverProtobuff","SenderFBS","SenderProtobuff","StringReceiver","StringSender"]
