@@ -8,34 +8,15 @@
 import cats.effect.{IO, IOApp}
 import com.comcast.ip4s.port
 import helpers.FlatbufferHelper
+import helpers.RabbitConnection.Receiver
 import lepus.client.*
 import lepus.protocol.domains.*
 
 import java.nio.ByteBuffer
 
 object ReceiverFBS extends IOApp.Simple {
-
-  private val exchange = ExchangeName.default
-
-  def app(con: Connection[IO]) = con.channel.use(ch =>
-    for {
-      message <- ch.messaging
-        .consume[Array[Byte]](QueueName("handler-inbox"))
-        .evalMap { message =>
-          FlatbufferHelper().Read(ByteBuffer.wrap(message.message.payload))
-          IO(println(s"Received raw message: $message"))
-//          IO(println(s"Received decoded message: $output"))
-        }
-        .compile.drain
-
-    } yield ()
-  )
-
-  private val connect = LepusClient[IO](port= port"5673", username="shamalw", password="secret", vhost=Path("paglabs24"), debug = true)
-
-
-  override def run: IO[Unit] = connect.use(app)
-
+  private val receiver = Receiver(QueueName("handler-inbox"), FlatbufferHelper().Read)
+  override def run: IO[Unit] = receiver._2.use(receiver._1.app)
 }
 
 
