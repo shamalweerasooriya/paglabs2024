@@ -18,5 +18,3 @@ object ReceiverProtobuff extends IOApp.Simple {
 
   override def run: IO[Unit] = receiver._2.use(receiver._1.app)
 }
-
-
