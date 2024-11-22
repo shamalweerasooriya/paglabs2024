@@ -4,42 +4,43 @@ import helpers.{FlatbufferHelper, ProtobuffHelper}
 object Benchmark extends IOApp.Simple {
 
   private val Iterations: Int = 10000
-  private var encodedMessages: Array[Array[Byte]] = Array.empty
+  private var encodedMessagesF: Array[Array[Byte]] = Array.empty
+  private var encodedMessagesP: Array[Array[Byte]] = Array.empty
 
   override def run: IO[Unit] = {
     for {
       encodeTime <- IO(encodingTime)
-      _ <- IO(println(s"Total time taken for Serialization = $encodeTime ms"))
+      _ <- IO(println(s"Total time taken for Serialization of Flatbuffer = $encodeTime ms"))
       decodeTime <- IO(decodingTime)
-      _ <- IO(println(s"Total time taken for Accessing = $decodeTime ms"))
-      avgSize = encodedMessages.flatten.length / Iterations
-      _ <- IO(println(s"Wire format size = $avgSize bytes"))
+      _ <- IO(println(s"Total time taken for Accessing of Flatbuffer = $decodeTime ms"))
+      avgSize = encodedMessagesF.flatten.length / Iterations
+      _ <- IO(println(s"Wire format size of Flatbuffer = $avgSize bytes"))
 
       encodeTimeProtobuf <- IO(encodingTimeProtoBuf)
       _ <- IO(println(s"Total time taken for Serialization of Protobuf = $encodeTimeProtobuf ms"))
       decodeTime <- IO(decodingTimeProtoBuf)
       _ <- IO(println(s"Total time taken for Accessing of Protobuf = $decodeTime ms"))
-      avgSize = encodedMessages.flatten.length / Iterations
-      _ <- IO(println(s"Wire format size = $avgSize bytes"))
+      avgSize = encodedMessagesP.flatten.length / Iterations
+      _ <- IO(println(s"Wire format size of Protobuf = $avgSize bytes"))
 
     } yield ()
   }
 
   private def encodingTime: Long = {
     val startTime = System.currentTimeMillis()
-    encodedMessages = Array.fill(Iterations)(FlatbufferHelper().Encode())
+    encodedMessagesF = Array.fill(Iterations)(FlatbufferHelper().Encode())
     System.currentTimeMillis() - startTime
   }
 
   private def encodingTimeProtoBuf: Long = {
     val startTime = System.currentTimeMillis()
-    encodedMessages = Array.fill(Iterations)(ProtobuffHelper().Encode())
+    encodedMessagesP = Array.fill(Iterations)(ProtobuffHelper().Encode())
     System.currentTimeMillis() - startTime
   }
 
   private def decodingTime: Long = {
     val startTime = System.currentTimeMillis()
-    encodedMessages.foreach { payload =>
+    encodedMessagesF.foreach { payload =>
       if (payload.nonEmpty) FlatbufferHelper().Read(payload)
     }
     System.currentTimeMillis() - startTime
@@ -47,7 +48,7 @@ object Benchmark extends IOApp.Simple {
 
   private def decodingTimeProtoBuf: Long = {
     val startTime = System.currentTimeMillis()
-    encodedMessages.foreach { payload =>
+    encodedMessagesP.foreach { payload =>
       if (payload.nonEmpty) ProtobuffHelper().Read(payload)
     }
     System.currentTimeMillis() - startTime
